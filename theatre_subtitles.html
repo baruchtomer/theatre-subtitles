@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theatre Subtitles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Home Page Styles */
+        .home-page {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .home-page h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #ffff00;
+        }
+
+        .link-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: inline-block;
+            padding: 1.5rem 3rem;
+            background: #333;
+            color: #ffff00;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid #ffff00;
+            transition: all 0.3s ease;
+            min-width: 300px;
+        }
+
+        .nav-link:hover {
+            background: #ffff00;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        /* User Display Styles */
+        .user-display {
+            background: #000;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .subtitle-text {
+            font-size: 4rem;
+            color: #ffff00;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            line-height: 1.2;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .admin-panel h2 {
+            color: #ffff00;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .file-upload {
+            background: #333;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 2px dashed #ffff00;
+        }
+
+        .file-upload input[type="file"] {
+            width: 100%;
+            padding: 1rem;
+            background: #555;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ffff00;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #e6e600;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background: #666;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #777;
+        }
+
+        .status {
+            background: #333;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .current-line {
+            background: #444;
+            padding: 1rem;
+            border-radius: 5px;
+            min-height: 100px;
+            color: #ffff00;
+            font-size: 1.2rem;
+            border-left: 4px solid #ffff00;
+        }
+
+        .line-info {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .home-page h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-link {
+                font-size: 1.2rem;
+                padding: 1rem 2rem;
+                min-width: 250px;
+            }
+            
+            .subtitle-text {
+                font-size: 2.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+        }
+
+        /* Prevent text selection on user display */
+        .user-display {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="home" class="container">
+        <div class="home-page">
+            <h1>Theatre Subtitles</h1>
+            <div class="link-container">
+                <a href="#" class="nav-link" onclick="showUserDisplay()">User Display</a>
+                <a href="#" class="nav-link" onclick="showAdminPanel()">Admin Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Display -->
+    <div id="user-display" class="container hidden">
+        <div class="user-display">
+            <div class="subtitle-text" id="subtitle-text">Waiting for subtitles...</div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="container hidden">
+        <div class="admin-panel">
+            <h2>Admin Panel</h2>
+            
+            <div class="controls">
+                <button class="btn btn-primary" onclick="nextLine()" id="next-btn" disabled>Next Line</button>
+                <button class="btn btn-secondary" onclick="previousLine()" id="prev-btn" disabled>Previous Line</button>
+                <button class="btn btn-secondary" onclick="resetToStart()" id="reset-btn" disabled>Reset</button>
+                <button class="btn btn-secondary" onclick="goHome()">Home</button>
+            </div>
+
+            <div class="status">
+                <div class="line-info" id="line-info">No file loaded</div>
+                <div class="current-line" id="current-line-display">Load a subtitle file to begin</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let subtitleLines = [];
+        let currentLineIndex = -1;
+        let wakeLock = null;
+
+        // Navigation functions
+        function showUserDisplay() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('user-display').classList.remove('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+            
+            // Request wake lock to prevent screen from sleeping
+            requestWakeLock();
+            
+            // Update display with current subtitle
+            updateUserDisplay();
+        }
+
+        function showAdminPanel() {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('user-display').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            
+            // Release wake lock
+            releaseWakeLock();
+        }
+
+        function goHome() {
+            document.getElementById('home').classList.remove('hidden');
+            document.getElementById('user-display').classList.add('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+            
+            // Release wake lock
+            releaseWakeLock();
+        }
+
+        // Wake lock functions
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Wake lock acquired');
+                }
+            } catch (err) {
+                console.error('Could not acquire wake lock:', err);
+            }
+        }
+
+        function releaseWakeLock() {
+            if (wakeLock) {
+                wakeLock.release();
+                wakeLock = null;
+                console.log('Wake lock released');
+            }
+        }
+
+        // File handling - load from GitHub
+        async function loadSubtitles() {
+            try {
+                const response = await fetch('subtitles.txt');
+                const content = await response.text();
+                subtitleLines = content.split('\n');
+                currentLineIndex = -1;
+                
+                // Enable controls
+                document.getElementById('next-btn').disabled = false;
+                document.getElementById('prev-btn').disabled = false;
+                document.getElementById('reset-btn').disabled = false;
+                
+                updateDisplay();
+                
+                console.log('Subtitles loaded successfully');
+            } catch (error) {
+                console.error('Error loading subtitles:', error);
+                alert('Error loading subtitles file. Make sure subtitles.txt exists in the same directory.');
+            }
+        }
+
+        // File handling (keeping old function for compatibility)
+        function loadFile() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                subtitleLines = content.split('\n');
+                currentLineIndex = -1;
+                
+                // Enable controls
+                document.getElementById('next-btn').disabled = false;
+                document.getElementById('prev-btn').disabled = false;
+                document.getElementById('reset-btn').disabled = false;
+                
+                updateDisplay();
+                
+                // Show first line automatically
+                nextLine();
+            };
+            
+            reader.readAsText(file);
+        }
+
+        // Navigation functions
+        function nextLine() {
+            if (currentLineIndex < subtitleLines.length - 1) {
+                currentLineIndex++;
+                updateDisplay();
+                updateUserDisplay();
+            }
+        }
+
+        function previousLine() {
+            if (currentLineIndex > 0) {
+                currentLineIndex--;
+                updateDisplay();
+                updateUserDisplay();
+            }
+        }
+
+        function resetToStart() {
+            currentLineIndex = -1;
+            updateDisplay();
+            updateUserDisplay();
+        }
+
+        // Display update functions
+        function updateDisplay() {
+            const lineInfo = document.getElementById('line-info');
+            const currentLineDisplay = document.getElementById('current-line-display');
+            
+            if (subtitleLines.length === 0) {
+                lineInfo.textContent = 'No file loaded';
+                currentLineDisplay.textContent = 'Load a subtitle file to begin';
+                return;
+            }
+
+            lineInfo.textContent = `Line ${currentLineIndex + 1} of ${subtitleLines.length}`;
+            
+            if (currentLineIndex >= 0 && currentLineIndex < subtitleLines.length) {
+                const currentLine = subtitleLines[currentLineIndex];
+                // Replace \n with actual line breaks for admin display too
+                currentLineDisplay.innerHTML = currentLine ? currentLine.replace(/\\n/g, '<br>') : '(blank line)';
+            } else {
+                currentLineDisplay.textContent = '(before start)';
+            }
+        }
+
+        function updateUserDisplay() {
+            const subtitleText = document.getElementById('subtitle-text');
+            
+            if (currentLineIndex >= 0 && currentLineIndex < subtitleLines.length) {
+                const currentLine = subtitleLines[currentLineIndex];
+                // Replace \n with actual line breaks
+                subtitleText.innerHTML = currentLine ? currentLine.replace(/\\n/g, '<br>') : '';
+            } else {
+                subtitleText.textContent = 'Waiting for subtitles...';
+            }
+        }
+
+        // Keyboard shortcuts for admin panel
+        document.addEventListener('keydown', function(event) {
+            // Only handle shortcuts when admin panel is visible
+            if (!document.getElementById('admin-panel').classList.contains('hidden')) {
+                if (event.code === 'Space' || event.code === 'ArrowRight') {
+                    event.preventDefault();
+                    nextLine();
+                } else if (event.code === 'ArrowLeft') {
+                    event.preventDefault();
+                    previousLine();
+                } else if (event.code === 'Home') {
+                    event.preventDefault();
+                    resetToStart();
+                }
+            }
+        });
+
+        // Handle visibility change (when tab becomes hidden/visible)
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && !document.getElementById('user-display').classList.contains('hidden')) {
+                requestWakeLock();
+            } else {
+                releaseWakeLock();
+            }
+        });
+
+        // Initialize - load subtitles automatically
+        loadSubtitles();
+        updateDisplay();
+    </script>
+</body>
+</html>
